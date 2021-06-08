@@ -15,6 +15,10 @@
                  ;; graphql server のためのライブラリ (?)
                  [com.walmartlabs/lacinia-pedestal "0.15.0"]
 
+                 ;; jetty
+                 [ring/ring-jetty-adapter "1.9.3"]
+                 [metosin/reitit "0.5.13"]
+
                  ;; 環境変数の読み込みのためのライブラリ
                  [environ "1.2.0"]
 

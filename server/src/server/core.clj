@@ -3,7 +3,15 @@
   (:require
    [server.infrastructure.schema :as s]
    [com.walmartlabs.lacinia :as lacinia]
-   [clojure.walk :as walk])
+   [clojure.walk :as walk]
+   [ring.adapter.jetty :as jetty]
+   [ring.util.request :as request]
+   [reitit.ring :as ring]
+   [clojure.data.json :as json]
+   [ring.middleware.resource :as resource]
+   [ring.middleware.content-type :as content-type]
+   [ring.middleware.not-modified :as not-modified])
+
   (:import (clojure.lang IPersistentMap)))
 
 (def schema (s/load-schema))
@@ -26,9 +34,27 @@
   (-> (lacinia/execute schema query-string nil nil)
       simplify))
 
+(defn graphql-handler [request]
+  (let [graphql-request (json/read-str (request/body-string request) :key-fn keyword)
+        {:keys [query variables]} graphql-request
+        result (lacinia/execute schema query variables nil)]
+    {:status 200
+     :body (json/write-str result)
+     :headers {"Content-Type" "application/json"}}))
+
+(def app
+  (-> (ring/ring-handler (ring/router ["/graphql" {:post graphql-handler}]))
+      (resource/wrap-resource "static")
+      content-type/wrap-content-type
+      not-modified/wrap-not-modified))
+
+(defn start-server []
+  (jetty/run-jetty app {:join? false :port 8080}))
+
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (println "Hello, World!"))
+  (println "Hello, World!")
+  (start-server))
 
 ;; (q "{ game_by_id(id: \"1234\") { id name summary }}")
