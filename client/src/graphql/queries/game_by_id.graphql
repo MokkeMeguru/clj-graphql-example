@@ -1,0 +1,11 @@
+query GameById($id: ID) {
+  game_by_id(id: $id) {
+    description
+    id
+    max_players
+    min_players
+    name
+    play_time
+    summary
+  }
+}

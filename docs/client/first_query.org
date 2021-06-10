@@ -1,0 +1,22 @@
+#+TITLE: First_query
+
+add query into src/graphql/queries/game_by_id.graphql
+#+begin_src graphql
+query GameById($id: ID) {
+  game_by_id(id: $id) {
+    description
+    id
+    max_players
+    min_players
+    name
+    play_time
+    summary
+  }
+}
+#+end_src
+
+
+#+begin_src shell
+npm install
+yarn run graphql:codegen
+#+end_src

@@ -1,0 +1,35 @@
+#+TITLE: First_view
+
+
+edit pages/index.tsx
+#+begin_src typescript
+
+#+end_src
+
+edit pages/_app.tsx
+#+begin_src typescript
+import { AppProps } from "next/app";
+import "../styles/globals.css";
+
+function MyApp({ Component, pageProps }: AppProps) {
+  return <Component {...pageProps} />;
+}
+
+export default MyApp;
+#+end_src
+
+edit pages/api/hello.ts
+
+#+begin_src typescript
+// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+export default (_: any, res: any) => {
+  res.status(200).json({ name: "John Doe" });
+};
+#+end_src
+
+and then delete *.js
+
+
+* get queries value
+
+edit pages/index.tsx

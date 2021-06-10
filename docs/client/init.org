@@ -1,0 +1,63 @@
+#+TITLE: Init
+
+#+begin_src shell
+npx create-next-app client
+yarn add @apollo/client graphql graphql-tag react-is @types/react-is styled-components
+yarn add -D typescript @types/react @types/react-dom @types/next @types/node
+yarn add -D @graphql-codegen/cli @graphql-codegen/introspection @graphql-codegen/typescript @graphql-codegen/typescript-operations @graphql-codegen/typescript-resolvers @graphql-codegen/typescript-react-apollo
+yarn add -D eslint typescript @typescript-eslint/parser  @typescript-eslint/eslint-plugin prettier eslint-config-prettier
+#+end_src
+
+
+vim .prettierignore
+#+begin_src text
+# Ignore artifacts:
+build
+coverage
+
+# Ignore all HTML files:
+*.html
+#+end_src
+
+
+#+begin_src shell
+npx tsc --init
+#+end_src
+
+- target, module -> esnext
+- jsx -> preserve
+- allowJs
+- noEmit
+- sourceMap
+- include
+  #+begin_example
+"inclide": [
+      "next-env.d.ts",
+      "**/*.ts",
+      "**/*.tsx",
+      "src/graphql/queries/*.graphql"
+    ],
+  #+end_example
+
+#+begin_src shell
+yarn graphql-codegen init
+#+end_src
+
+#+begin_example
+? What type of application are you building? Application built with React
+? Where is your schema?: (path or url) http://localhost:3030
+? Where are your operations and fragments?: src/graphql/queries/*.graphql
+? Pick plugins: TypeScript (required by other typescript plugins), TypeScript Operations (operations and fragments), TypeScript React Apollo (typed components and HOCs)
+? Where to write the output: src/graphql/types.d.tsx
+? Do you want to generate an introspection file? No
+? How to name the config file? codegen.yml
+? What script in package.json should run the codegen? graphql:codegen
+#+end_example
+
+#+begin_src shell
+touch next.config.js
+yarn dev
+#+end_src
+
+and then C-c
+
