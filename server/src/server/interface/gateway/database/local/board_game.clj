@@ -1,10 +1,11 @@
 (ns server.interface.gateway.database.local.board-game
   (:require
    [server.interface.gateway.database.board-game :refer [BoardGame] :as irepository]
-   [server-utils.sequence :refer [find-first]]))
+   [server-utils.sequence :refer [find-first]])
+  (:import server.infrastructure.database.local.proto.Boundary))
 
 (extend-protocol BoardGame
-  server.infrastructure.database.local.core.Boundary
+  Boundary
   (get-board-games [{{:keys [datasource]} :spec} {:keys [with-designer?]}]
     (if with-designer?
       (map (fn [game]

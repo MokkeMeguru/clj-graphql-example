@@ -17,4 +17,6 @@
     (timbre/info "query: game " args value)
     (when (le/selects-field? ctx :BoardGame/designers)
       (timbre/info "warn: n+1 is raised "))
-    (repository.board-game/get-board-game-by-id db id opt)))
+    (try (repository.board-game/get-board-game-by-id db id opt)
+         (catch Exception e
+           (clojure.pprint/pprint e)))))

@@ -6,7 +6,7 @@
             :comment "MIT License"
             :year 2021
             :key "mit"}
-  :dependencies [[org.clojure/clojure "1.10.1"]
+  :dependencies [[org.clojure/clojure "1.10.3"]
                  ;; アプリの状態管理
                  [integrant "0.8.0"]
                  [integrant/repl "0.3.2"]

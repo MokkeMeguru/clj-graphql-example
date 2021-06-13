@@ -3,6 +3,7 @@
    [reitit.ring :as ring]
    [reitit.coercion.spec]
    [server.infrastructure.router.graphql :as graphql-router]
+   [server-utils.infrastructure.router.util :refer [form-wrap-cors]]
 
    [ring.logger :refer [wrap-with-logger]]
 
@@ -45,13 +46,12 @@
                ;; coercing request parameters
              coercion/coerce-request-middleware
                ;; multipart
-             reitit-multipart/multipart-middleware
-             ]}
-     })
+             reitit-multipart/multipart-middleware]}})
+
    (ring/routes
     (ring/create-default-handler))
-   ;; {:middleware [wrap-with-logger]}
-   ))
+   {:middleware [wrap-with-logger
+                 (form-wrap-cors {})]}))
 
 (defmethod ig/init-key ::router [_ {:keys [env schema]}]
   (timbre/info "router got: env" env)
