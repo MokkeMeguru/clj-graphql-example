@@ -1,7 +1,50 @@
+#+TITLE: Project_structure
+* project init
+#+begin_src shell
+lein new clj-graphql-example
+#+end_src
+
+* プロジェクト構成
+#+begin_example
+.
+|-- CHANGELOG.md
+|-- LICENSE
+|-- README.md
+|-- project.clj
+|-- profiles.clj
+|-- resources
+|   |-- cgg-data.edn
+|   |-- cgg-schema.edn
+|   |-- cgg-schema.graphql
+|   |-- config.edn
+|   `-- static
+|       `-- playground.html
+|-- dev # 開発用
+|   |-- resources
+|   `-- src
+|       |-- dev.clj
+|       `-- user.clj
+|-- src
+|   `-- server
+|       |-- core.clj # start point
+|       |-- domain
+|       |-- infrastructure
+|       |-- interface
+|       `-- usecase
+`-- test
+#+end_example
+
+* profiles.clj
+#+begin_src clojure
+{:profiles/dev {:env {}}
+ :profiles/test {:env {}}}
+#+end_src
+* project.clj
+#+begin_src clojure
 (defproject server "0.1.0"
   :description "Simple GraphQL Server"
   :url "http://example.com/FIXME"
-  :license {:name "MIT"
+    :license {:name "MIT"
             :url "https://choosealicense.com/licenses/mit"
             :comment "MIT License"
             :year 2021
@@ -18,8 +61,6 @@
                  ;; jetty & router
                  [ring/ring-jetty-adapter "1.9.3"]
                  [metosin/reitit "0.5.13"]
-                 [ring-logger "1.0.1"]
-                 [com.fasterxml.jackson.core/jackson-core "2.12.2"]
 
                  ;; 環境変数の読み込みのためのライブラリ
                  [environ "1.2.0"]
@@ -66,10 +107,7 @@
                             :resource-paths ["dev/resources"]}
              :profiles/test {}
              :uberjar {:aot :all
-                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}
-
-             :repl {:prep-tasks ^:replace ["javac" "compile"]
-                    :repl-options {:init-ns user}}}
+                       :jvm-opts ["-Dclojure.compiler.direct-linking=true"]}}
   :repl-options
   {:host "0.0.0.0"
    :port 39998}
@@ -82,3 +120,4 @@
                "--ns-exclude-regex" "picture-gallery.core$"
                "--codecov"
                "--summary"]})
+#+end_src

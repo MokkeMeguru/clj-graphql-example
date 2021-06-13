@@ -1,0 +1,30 @@
+#+TITLE: Graphql Init
+
+* documentation?
+https://www.apollographql.com/docs/apollo-server/schema/schema/#documentation-strings
+
+* initialization
+先頭行に schema を定義する
+
+#+begin_src graphql
+# schema
+schema {
+  query: Query
+  # mutaion: Mutation
+}
+#+end_src
+
+mutaion はデータの更新処理で、 read-only な処理であればコメントアウトしてよい。
+
+* resolver の書き方
+#+begin_src clojure
+(parser.schema/parse-schema schema-data
+ {:resolvers
+  {:Query {:game_by_id (fn [context args value] [])}
+   :BoardGame {:designers (fn [context args value] [])}
+   :Designer {:games (fn [context args value] [])}}})
+#+end_src
+
+
+* [TODO] pagenation
+Relay Specification

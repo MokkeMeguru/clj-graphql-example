@@ -1,0 +1,73 @@
+#+TITLE: Intergrant
+* resources/config.edn
+
+#+begin_src clojure
+{:server.infrastructure.env/env {}}
+#+end_src
+
+* core.clj
+
+#+begin_src clojure
+(ns server.core
+  (:gen-class)
+  (:require [environ.core :refer [env]]
+            [clojure.java.io :as io]
+            [integrant.core :as ig]))
+
+(def config-file
+  (if-let [config-file (env :config-file)]
+    config-file
+    "config.edn"))
+
+(defn load-config [config]
+  (-> config
+      io/resource
+      slurp
+      ig/read-string
+      (doto
+       ig/load-namespaces)))
+
+(defn -main
+  [& args]
+  (-> config-file
+      load-config
+      ig/init))
+#+end_src
+
+* server/infrastructure/env.clj
+
+#+begin_src clojure
+(ns server.infrastructure.env
+  (:require [environ.core :refer [env]]
+            [integrant.core :as ig]
+            [orchestra.spec.test :as st]
+            [clojure.spec.alpha :as s]))
+
+(s/fdef decode-log-level
+  :args (s/cat :str-log-level string?)
+  :ret #{:trace :debug :info :warn :error :fatal :report})
+
+(defn decode-log-level
+  [str-log-level]
+  (condp = str-log-level
+    "trace" :trace
+    "debug" :debug
+    "info" :info
+    "warn" :warn
+    "error" :error
+    "fatal" :fatal
+    "report" :report
+    :info))
+
+(defmethod ig/init-key ::env [_ _]
+  (println "loading environment via environ")
+  (let [running (env :env)
+        log-level (decode-log-level (env :log-level))]
+    (println "running in" running)
+    (println "log-level" log-level)
+    (when (.contains ["test" "dev"] running)
+      (println "orchestra instrument is active")
+      (st/instrument))
+    {:running running
+     :log-level log-level}))
+#+end_src

@@ -1,8 +1,18 @@
 {:server.infrastructure.env/env {}
- :server.infrastrucutre.logger/logger {:env #ig/ref :server.infrastructure.env/env}
- :server.infrastructure.graphql/graphql {:env #ig/ref :server.infrastructure.env/env}
+ :server.infrastructure.logger/logger {:env #ig/ref :server.infrastructure.env/env}
+ :server.infrastructure.database.local.core/database {:local-data "cgg-data.edn"}
+ :server.infrastructure.graphql.core/schema {:env #ig/ref :server.infrastructure.env/env
+                                             :graphql-schema "cgg-schema.graphql"
+                                             :database #ig/ref :server.infrastructure.database.local.core/database}
  :server.infrastructure.router.core/router {:env #ig/ref :server.infrastructure.env/env
-                                            :graphql #ig/ref :server.infrastructure.graphql/graphql}
+                                            :schema #ig/ref :server.infrastructure.graphql.core/schema}
  :server.infrastructure.server/server {:env #ig/ref :server.infrastructure.env/env
                                        :router #ig/ref :server.infrastructure.router.core/router
-                                       :port 3000}}
+                                       :port 4030}
+
+ ;; :server.infrastructure.router.core/router {:env #ig/ref :server.infrastructure.env/env
+ ;;                                            :graphql #ig/ref :server.infrastructure.graphql/graphql}
+ ;; :server.infrastructure.server/server {:env #ig/ref :server.infrastructure.env/env
+ ;;                                       :router #ig/ref :server.infrastructure.router.core/router
+ ;;                                       :port 3000}
+ }

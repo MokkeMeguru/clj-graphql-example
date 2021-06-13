@@ -1,0 +1,115 @@
+# schema
+schema {
+  query: Query
+  # mutaion: Mutation
+}
+
+# base types
+"""
+Information about pagination in a connection
+see. https://www.graphqlbin.com/hn-relay-full.graphql
+"""
+type PageInfo {
+  "When paginating forwards, are there more items?"
+  hasPreviousPage: Boolean
+  "When paginating backwards, are there more items?"
+  hasNextPage: Boolean
+  "When paginating backwards, the cursor to continue."
+  startCursor: String!
+  "When pagination forwards, the cursor to continue."
+  endCursor: String!
+}
+
+"""
+An Object with an ID
+"""
+interface Node {
+  # The id of the object
+  id: ID!
+}
+
+interface Edge {
+  cursor: String!
+  node: Node!
+}
+
+interface Connection {
+  pageInfo: PageInfo!
+  edges: [Edge]!
+}
+# types
+"""
+A physical or virtual board game.
+"""
+type BoardGame implements Node {
+  id: ID!
+  name: String!
+  "The maximum number of players the game supports."
+  max_players: Int
+
+  "The minimum number of players the game supports."
+  min_players: Int
+
+  "A long-form description of the game."
+  description: String
+
+  "Designers who contributed to the game."
+  # designers(
+  #   after: String
+  #   first: Int
+  #   before: String
+  #   last: Int
+  # ): [DesignerConnection]!
+  designers: [Designer!]
+  "Play time, in minutes, for a typical game."
+  play_time: Int
+
+  "A one-line summary of the game."
+  summary: String
+}
+
+type BoardGameEdge implements Edge {
+  cursor: String!
+  node: BoardGame!
+}
+
+type BoardGameConnection implements Connection {
+  edges: [BoardGameEdge]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+"""
+A person who may have contributed to a board game design.
+"""
+type Designer implements Node {
+  id: ID!
+  name: String!
+  "Home page URL, if known."
+  url: String
+}
+
+type DesignerEdge implements Edge {
+  cursor: String!
+  node: Designer!
+}
+
+type DesignerConnection implements Connection {
+  edges: [DesignerEdge]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+# query
+type Query {
+  # "Fetches an object given its ID / これは Global に一意な名前がつけられている際に使える技"
+  # node(id: ID!): Node
+  "Access a BoardGame by its unique id, if it exists."
+  game(id: ID): BoardGame
+  "Access a Designer by its unique id, if it exists."
+  designer(id: ID): Designer
+  "find all board games"
+  games: [BoardGame!]
+  "find all designers"
+  designers: [Designer!]
+}

@@ -1,0 +1,34 @@
+#+TITLE: dev initialize
+* dev/src/dev.clj
+#+begin_src clojure
+(ns dev
+  (:require
+   [server.core :as core]
+   [integrant.repl :as igr]))
+
+(defn start
+  ([]
+   (start core/config-file))
+  ([config-file]
+   (igr/set-prep! (constantly (core/load-config config-file)))
+   (igr/prep)
+   (igr/init)))
+
+(defn stop []
+  (igr/halt))
+
+(defn restart []
+  (igr/reset-all))
+#+end_src
+* dev/src/user.clj
+#+begin_src clojure
+(ns user)
+
+(defn dev
+  "Load and switch to the 'dev' namespace"
+  []
+  (println ":switch to dev")
+  (require 'dev)
+  (in-ns 'dev)
+  :loaded)
+#+end_src
